@@ -51,7 +51,8 @@
             background: linear-gradient(45deg, #ff0099, #7700ff);
             border-radius: 5px;
             box-shadow: 0 0 15px #ff0099;
-            transition: transform 0.2s;
+            transition: transform 0.2s, left 0.5s ease, top 0.5s ease;
+            position: relative;
         }
 
         .button:hover {
@@ -64,7 +65,7 @@
     <div class="content">
         <h1>Happy 17th Birthday, Rachel!</h1>
         <p>We hope your day is out of this world!</p>
-        <a class="button" href="#" onclick="alert('Happy Birthday, Rachel! 🌟')">Click for a Surprise!</a>
+        <a class="button" id="surprise-button" href="#">Click for a Surprise!</a>
     </div>
 
     <script>
@@ -116,7 +117,22 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         });
+
+        const button = document.getElementById('surprise-button');
+        let moveCount = 0;
+
+        button.addEventListener('click', (e) => {
+            if (moveCount < 2) {
+                const randomX = Math.random() * (window.innerWidth - button.offsetWidth);
+                const randomY = Math.random() * (window.innerHeight - button.offsetHeight);
+                button.style.left = `${randomX}px`;
+                button.style.top = `${randomY}px`;
+                moveCount++;
+                e.preventDefault(); // Prevent the default click action
+            } else {
+                window.location.href = "photos.html"; // Redirect to another page
+            }
+        });
     </script>
 </body>
 </html>
-
