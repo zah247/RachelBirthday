@@ -18,16 +18,8 @@
             font-size: 3rem;
             text-align: center;
             margin-top: 50px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                color: #f9a825;
-            }
-            50% {
-                color: #ffd700;
-            }
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
         }
 
         #canvas {
@@ -39,83 +31,91 @@
             z-index: -1;
         }
 
-        .message {
-            text-align: center;
-            font-size: 1.5rem;
-            margin: 20px auto;
-            max-width: 600px;
+        @keyframes swirl {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
         }
 
-        .btn {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            font-size: 1.2rem;
-            color: white;
-            background: #f9a825;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            animation: swirl 5s linear infinite;
         }
 
-        .btn:hover {
-            background: #ffd700;
+        .sun {
+            background: yellow;
+            width: 50px;
+            height: 50px;
+            top: calc(50% - 25px);
+            left: calc(50% - 25px);
+            z-index: 1;
+        }
+
+        .orbit {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            top: calc(50% - 100px);
+            left: calc(50% - 100px);
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .planet.small {
+            background: blue;
+            width: 20px;
+            height: 20px;
+        }
+
+        .planet.medium {
+            background: red;
+            width: 30px;
+            height: 30px;
+        }
+
+        .planet.large {
+            background: green;
+            width: 40px;
+            height: 40px;
         }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
-    <h1>Happy 17th Birthday, Rachel! 🎉✨</h1>
-    <div class="message">
-        Wishing you a stellar year ahead filled with laughter, joy, and success. You're the brightest star in the galaxy! 🚀💫
+    <div class="orbit">
+        <div class="planet small" style="top: 0; left: 50%; transform: translate(-50%, -50%)"></div>
+        <div class="planet medium" style="top: 100%; left: 50%; transform: translate(-50%, -50%)"></div>
+        <div class="planet large" style="top: 50%; left: 100%; transform: translate(-50%, -50%)"></div>
     </div>
-    <button class="btn" onclick="showSurprise()">Click for a Surprise! 🌌</button>
+    <div class="sun"></div>
+    <h1 id="birthday-message">Happy 17th Birthday, Rachel! 🎉✨</h1>
 
     <script>
-        // Starfield Animation
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        const planets = document.querySelectorAll('.planet');
+        const message = document.getElementById('birthday-message');
 
-        let stars = [];
-        for (let i = 0; i < 200; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 2,
-                speed: Math.random() * 0.5
+        // Swirling animation control
+        setTimeout(() => {
+            planets.forEach(planet => {
+                planet.style.animation = 'none';
+                planet.style.transition = 'transform 2s';
             });
-        }
 
-        function drawStars() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'white';
-            stars.forEach(star => {
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-                ctx.fill();
-                star.y += star.speed;
-                if (star.y > canvas.height) star.y = 0;
-            });
-        }
+            // Align planets in place
+            planets[0].style.transform = 'translate(0, -100px)';
+            planets[1].style.transform = 'translate(0, 100px)';
+            planets[2].style.transform = 'translate(100px, 0)';
 
-        function animate() {
-            drawStars();
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        // Surprise Pop-Up
-        function showSurprise() {
-            alert("Rachel, you're out of this world! 🌟 Keep shining brightly.");
-        }
-
-        // Adjust canvas size on window resize
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
+            // Show the birthday message
+            setTimeout(() => {
+                message.style.opacity = 1;
+            }, 2000);
+        }, 5000);
     </script>
 </body>
 </html>
