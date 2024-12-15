@@ -3,23 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday, Rachel!</title>
+    <title>Happy Birthday Rachel!</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            color: white;
-            background: #0b1b2c;
             overflow: hidden;
-        }
-
-        h1 {
-            font-size: 3rem;
+            background: #000;
+            color: white;
+            font-family: 'Arial', sans-serif;
             text-align: center;
-            margin-top: 20px;
-            color: #f9f871;
-            text-shadow: 2px 2px 4px #000;
         }
 
         #canvas {
@@ -28,111 +21,66 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
         }
 
-        .message {
+        .content {
             position: absolute;
-            bottom: 10%;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 4rem;
+            text-shadow: 0 0 20px #ff0099;
+        }
+
+        p {
             font-size: 1.5rem;
-            text-align: center;
+            text-shadow: 0 0 10px #ffffff;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
             color: #fff;
-            max-width: 500px;
-            line-height: 1.5;
-            animation: fadeIn 3s ease-in-out forwards;
+            text-decoration: none;
+            background: linear-gradient(45deg, #ff0099, #7700ff);
+            border-radius: 5px;
+            box-shadow: 0 0 15px #ff0099;
+            transition: transform 0.2s;
         }
 
-        .planet, .rocket, .astronaut, .sun {
-            position: absolute;
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite alternate;
-        }
-
-        .sun {
-            background: yellow;
-            width: 80px;
-            height: 80px;
-            top: 10%;
-            right: 10%;
-        }
-
-        .planet {
-            background: red;
-            width: 50px;
-            height: 50px;
-        }
-
-        .rocket {
-            width: 70px;
-            height: 70px;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/64/Space_rocket_icon.png');
-            background-size: cover;
-            top: 20%;
-            left: 10%;
-            animation: fly 8s ease-in-out infinite;
-        }
-
-        .astronaut {
-            width: 60px;
-            height: 60px;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Astronaut-helmet.png/600px-Astronaut-helmet.png');
-            background-size: cover;
-            bottom: 15%;
-            right: 20%;
-        }
-
-        @keyframes fly {
-            0% {
-                transform: translateY(0) rotate(0deg);
-            }
-            100% {
-                transform: translateY(-100px) rotate(15deg);
-            }
-        }
-
-        @keyframes float {
-            from {
-                transform: translateY(0);
-            }
-            to {
-                transform: translateY(-20px);
-            }
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+        .button:hover {
+            transform: scale(1.1);
         }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
-    <div class="sun"></div>
-    <div class="rocket"></div>
-    <div class="planet" style="background: #39b5e0; width: 60px; height: 60px; top: 30%; left: 70%;"></div>
-    <div class="planet" style="background: #d95763; width: 40px; height: 40px; top: 50%; left: 20%;"></div>
-    <div class="planet" style="background: #2e8b57; width: 70px; height: 70px; bottom: 20%; right: 30%;"></div>
-    <div class="astronaut"></div>
-
-    <h1>Thanks for Making My Birthday Out of This World! 🎉</h1>
-    <div class="message">
-        Love, Rachel! 🚀✨
+    <div class="content">
+        <h1>Happy 17th Birthday, Rachel!</h1>
+        <p>We hope your day is out of this world!</p>
+        <a class="button" href="#" onclick="alert('Happy Birthday, Rachel! 🌟')">Click for a Surprise!</a>
     </div>
 
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        let stars = [];
-        for (let i = 0; i < 100; i++) {
+        const stars = [];
+        for (let i = 0; i < 200; i++) {
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                radius: Math.random() * 2
+                size: Math.random() * 2,
+                speed: Math.random() * 0.05 + 0.05
             });
         }
 
@@ -141,16 +89,34 @@
             ctx.fillStyle = 'white';
             stars.forEach(star => {
                 ctx.beginPath();
-                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
                 ctx.fill();
+            });
+        }
+
+        function updateStars() {
+            stars.forEach(star => {
+                star.y += star.speed;
+                if (star.y > canvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * canvas.width;
+                }
             });
         }
 
         function animate() {
             drawStars();
+            updateStars();
             requestAnimationFrame(animate);
         }
+
         animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
     </script>
 </body>
 </html>
+
