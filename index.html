@@ -51,12 +51,49 @@
             background: linear-gradient(45deg, #ff0099, #7700ff);
             border-radius: 5px;
             box-shadow: 0 0 15px #ff0099;
-            transition: transform 0.2s, left 0.5s ease, top 0.5s ease;
-            position: relative;
+            transition: transform 0.2s;
         }
 
         .button:hover {
             transform: scale(1.1);
+        }
+
+        /* Style for the pop-up */
+        .popup {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 0, 153, 0.5);
+            z-index: 3;
+        }
+
+        .popup h2 {
+            font-size: 2rem;
+            color: #ff0099;
+        }
+
+        .popup p {
+            font-size: 1rem;
+            color: white;
+        }
+
+        .popup .close-btn {
+            background: #ff0099;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            margin-top: 10px;
+        }
+
+        .popup .close-btn:hover {
+            background: #7700ff;
         }
     </style>
 </head>
@@ -65,7 +102,15 @@
     <div class="content">
         <h1>Happy 17th Birthday, Rachel!</h1>
         <p>We hope your day is out of this world!</p>
+        <!-- Button -->
         <a class="button" id="surprise-button" href="#">Click for a Surprise!</a>
+    </div>
+
+    <!-- Pop-up content -->
+    <div class="popup" id="popup">
+        <h2>Surprise!</h2>
+        <p>Happy 17th Birthday, Rachel! 🎉</p>
+        <button class="close-btn" id="close-btn">Close</button>
     </div>
 
     <script>
@@ -119,27 +164,19 @@
         });
 
         const button = document.getElementById('surprise-button');
-        let moveCount = 0;
+        const popup = document.getElementById('popup');
+        const closeBtn = document.getElementById('close-btn');
 
-button.addEventListener('click', (e) => {
-    if (moveCount < 2) {
-        // Calculate the maximum x and y coordinates so the button stays within the screen bounds
-        const maxX = window.innerWidth - button.offsetWidth;
-        const maxY = window.innerHeight - button.offsetHeight;
+        // Show the pop-up when the button is clicked
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            popup.style.display = 'block'; // Show the pop-up
+        });
 
-        const randomX = Math.random() * maxX;
-        const randomY = Math.random() * maxY;
-
-        button.style.left = `${randomX}px`;
-        button.style.top = `${randomY}px`;
-
-        moveCount++;
-        e.preventDefault(); // Prevent the default click action
-    } else {
-        window.location.href = "photos.html"; // Redirect to another page
-    }
-});
-
+        // Close the pop-up when the close button is clicked
+        closeBtn.addEventListener('click', () => {
+            popup.style.display = 'none'; // Hide the pop-up
+        });
     </script>
 </body>
 </html>
