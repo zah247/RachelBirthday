@@ -10,16 +10,16 @@
             padding: 0;
             font-family: 'Arial', sans-serif;
             color: white;
-            background: radial-gradient(circle, #1b1b2f, #0f0f1e);
+            background: #0b1b2c;
             overflow: hidden;
         }
 
         h1 {
             font-size: 3rem;
             text-align: center;
-            margin-top: 50px;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
+            margin-top: 20px;
+            color: #f9f871;
+            text-shadow: 2px 2px 4px #000;
         }
 
         #canvas {
@@ -31,91 +31,127 @@
             z-index: -1;
         }
 
-        @keyframes swirl {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            100% {
-                transform: translate(0, 0) rotate(360deg);
-            }
+        .message {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            text-align: center;
+            color: #fff;
+            max-width: 500px;
+            line-height: 1.5;
+            animation: fadeIn 3s ease-in-out forwards;
         }
 
-        .planet {
+        .planet, .rocket, .astronaut, .sun {
             position: absolute;
             border-radius: 50%;
-            animation: swirl 5s linear infinite;
+            animation: float 6s ease-in-out infinite alternate;
         }
 
         .sun {
             background: yellow;
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            right: 10%;
+        }
+
+        .planet {
+            background: red;
             width: 50px;
             height: 50px;
-            top: calc(50% - 25px);
-            left: calc(50% - 25px);
-            z-index: 1;
         }
 
-        .orbit {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            top: calc(50% - 100px);
-            left: calc(50% - 100px);
-            border: 1px dashed rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            z-index: 0;
+        .rocket {
+            width: 70px;
+            height: 70px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/64/Space_rocket_icon.png');
+            background-size: cover;
+            top: 20%;
+            left: 10%;
+            animation: fly 8s ease-in-out infinite;
         }
 
-        .planet.small {
-            background: blue;
-            width: 20px;
-            height: 20px;
+        .astronaut {
+            width: 60px;
+            height: 60px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Astronaut-helmet.png/600px-Astronaut-helmet.png');
+            background-size: cover;
+            bottom: 15%;
+            right: 20%;
         }
 
-        .planet.medium {
-            background: red;
-            width: 30px;
-            height: 30px;
+        @keyframes fly {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100px) rotate(15deg);
+            }
         }
 
-        .planet.large {
-            background: green;
-            width: 40px;
-            height: 40px;
+        @keyframes float {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
-    <div class="orbit">
-        <div class="planet small" style="top: 0; left: 50%; transform: translate(-50%, -50%)"></div>
-        <div class="planet medium" style="top: 100%; left: 50%; transform: translate(-50%, -50%)"></div>
-        <div class="planet large" style="top: 50%; left: 100%; transform: translate(-50%, -50%)"></div>
-    </div>
     <div class="sun"></div>
-    <h1 id="birthday-message">Happy 17th Birthday, Rachel! 🎉✨</h1>
+    <div class="rocket"></div>
+    <div class="planet" style="background: #39b5e0; width: 60px; height: 60px; top: 30%; left: 70%;"></div>
+    <div class="planet" style="background: #d95763; width: 40px; height: 40px; top: 50%; left: 20%;"></div>
+    <div class="planet" style="background: #2e8b57; width: 70px; height: 70px; bottom: 20%; right: 30%;"></div>
+    <div class="astronaut"></div>
+
+    <h1>Thanks for Making My Birthday Out of This World! 🎉</h1>
+    <div class="message">
+        Love, Rachel! 🚀✨
+    </div>
 
     <script>
-        const planets = document.querySelectorAll('.planet');
-        const message = document.getElementById('birthday-message');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-        // Swirling animation control
-        setTimeout(() => {
-            planets.forEach(planet => {
-                planet.style.animation = 'none';
-                planet.style.transition = 'transform 2s';
+        let stars = [];
+        for (let i = 0; i < 100; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2
             });
+        }
 
-            // Align planets in place
-            planets[0].style.transform = 'translate(0, -100px)';
-            planets[1].style.transform = 'translate(0, 100px)';
-            planets[2].style.transform = 'translate(100px, 0)';
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
 
-            // Show the birthday message
-            setTimeout(() => {
-                message.style.opacity = 1;
-            }, 2000);
-        }, 5000);
+        function animate() {
+            drawStars();
+            requestAnimationFrame(animate);
+        }
+        animate();
     </script>
 </body>
 </html>
+
